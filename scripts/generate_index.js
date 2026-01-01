@@ -5,11 +5,18 @@ import { fileURLToPath } from 'url';
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
-const TARGET_DIR = path.join(__dirname, '../../Utilitaires');
+const TARGET_DIR = path.resolve(__dirname, '../../Utilitaires');
+const PUBLIC_DOCS_DIR = path.resolve(__dirname, '../public/docs');
 const OUTPUT_FILE = path.join(__dirname, '../public/data.json');
 
 // Dossiers à exclure strictement (sécurité)
 const EXCLUDED_DIRS = ['Codes_De_Recuperation', 'Mongo_User_informations', '.git', 'node_modules'];
+
+// Nettoyer le dossier public/docs avant de regenerer
+if (fs.existsSync(PUBLIC_DOCS_DIR)) {
+    fs.rmSync(PUBLIC_DOCS_DIR, { recursive: true, force: true });
+}
+fs.mkdirSync(PUBLIC_DOCS_DIR, { recursive: true });
 
 function scanDirectory(dir, relativePath = '') {
     let results = [];
@@ -26,6 +33,10 @@ function scanDirectory(dir, relativePath = '') {
         if (stat.isDirectory()) {
             const children = scanDirectory(fullPath, relPath);
             if (children.length > 0) {
+                // Créer le sous-dossier dans public/docs
+                const publicSubDir = path.join(PUBLIC_DOCS_DIR, relPath);
+                if (!fs.existsSync(publicSubDir)) fs.mkdirSync(publicSubDir, { recursive: true });
+
                 results.push({
                     name: file,
                     type: 'directory',
@@ -36,6 +47,11 @@ function scanDirectory(dir, relativePath = '') {
         } else {
             // Uniquement les fichiers Markdown .md
             if (path.extname(file).toLowerCase() === '.md') {
+                // Créer un lien symbolique individuel dans public/docs
+                const publicFilePath = path.join(PUBLIC_DOCS_DIR, relPath);
+                if (fs.existsSync(publicFilePath)) fs.unlinkSync(publicFilePath);
+                fs.symlinkSync(fullPath, publicFilePath);
+
                 results.push({
                     name: file,
                     type: 'file',
