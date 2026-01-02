@@ -64,10 +64,16 @@ function scanDirectory(dir, relativePath = '') {
         } else {
             // Uniquement les fichiers Markdown .md
             if (path.extname(file).toLowerCase() === '.md') {
-                // Créer un lien symbolique individuel dans public/docs
+                // COPIE physique pour le déploiement (Render ne peut pas lire ../../Utilitaires)
                 const publicFilePath = path.join(PUBLIC_DOCS_DIR, relPath);
-                if (fs.existsSync(publicFilePath)) fs.unlinkSync(publicFilePath);
-                fs.symlinkSync(fullPath, publicFilePath);
+
+                // Si le fichier existe déjà, on vérifie si c'est un lien symbolique pour le supprimer
+                try {
+                    const currentStat = fs.lstatSync(publicFilePath);
+                    if (currentStat.isSymbolicLink()) fs.unlinkSync(publicFilePath);
+                } catch (e) { } // Le fichier n'existe pas encore
+
+                fs.copyFileSync(fullPath, publicFilePath);
 
                 results.push({
                     name: file,

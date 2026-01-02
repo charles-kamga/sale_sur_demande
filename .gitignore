@@ -26,5 +26,6 @@ dist-ssr
 # Vite specific
 .vite
 
-# Symlink to docs (Utilitaires)
-public/docs
+# Symlink/Copy to docs (Utilitaires)
+# On commente cette ligne pour permettre l'upload des MD sur GitHub/Render
+# public/docs
