@@ -12,11 +12,28 @@ const OUTPUT_FILE = path.join(__dirname, '../public/data.json');
 // Dossiers à exclure strictement (sécurité)
 const EXCLUDED_DIRS = ['Codes_De_Recuperation', 'Mongo_User_informations', '.git', 'node_modules'];
 
-// Nettoyer le dossier public/docs avant de regenerer
-if (fs.existsSync(PUBLIC_DOCS_DIR)) {
-    fs.rmSync(PUBLIC_DOCS_DIR, { recursive: true, force: true });
+// Nettoyage PREVENTIF : On ne supprime que les liens symboliques existants
+// On ne touche PAS aux fichiers réels que l'utilisateur aurait pu déposer par erreur
+function cleanSymlinks(dir) {
+    if (!fs.existsSync(dir)) return;
+    const entries = fs.readdirSync(dir);
+
+    for (const entry of entries) {
+        const fullPath = path.join(dir, entry);
+        try {
+            const stat = fs.lstatSync(fullPath);
+            if (stat.isSymbolicLink()) {
+                fs.unlinkSync(fullPath); // Supprime le lien
+            } else if (stat.isDirectory()) {
+                cleanSymlinks(fullPath); // Récursion
+            }
+        } catch (e) {
+            // Ignorer erreurs d'accès
+        }
+    }
 }
-fs.mkdirSync(PUBLIC_DOCS_DIR, { recursive: true });
+cleanSymlinks(PUBLIC_DOCS_DIR);
+if (!fs.existsSync(PUBLIC_DOCS_DIR)) fs.mkdirSync(PUBLIC_DOCS_DIR, { recursive: true });
 
 function scanDirectory(dir, relativePath = '') {
     let results = [];
