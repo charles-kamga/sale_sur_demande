@@ -101,14 +101,14 @@ Une fois cracké, Hashcat n'affiche pas toujours le mot de passe clair immédiat
 
 *Pour ne pas oublier à quoi sert chaque petit bout de texte.*
 
-| Option | Signification | Contexte d'utilisation |
-| :--- | :--- | :--- |
-| **-m 22000** | **Module** : WPA-PBKDF2-PMKID+EAPOL | Indispensable pour cracker du Wi-Fi moderne. |
-| **-a 0** | **Attaque** : Straight (Directe) | Dictionnaire simple (comme rockyou). |
-| **-a 6** | **Attaque** : Hybride (Dico + Masque) | Pour tester `Mot123` (Chiffres à la fin). |
-| **-a 7** | **Attaque** : Hybride (Masque + Dico) | Pour tester `123Mot` (Chiffres au début). |
-| **-r [fichier]** | **Rules** (Règles) | Pour appliquer des mutations (best64.rule, dive.rule). |
-| **?d** | **Digit** (Chiffre) | Représente `0123456789`. |
-| **--show** | **Montrer** | Affiche les mots de passe déjà trouvés dans le "pot". |
+| Option      | Signification                                | Contexte d'utilisation                              |
+| :---------- | :------------------------------------------- | :-------------------------------------------------- |
+| **-m 22000**  | **Module** : WPA-PBKDF2-PMKID+EAPOL            | Indispensable pour cracker du Wi-Fi moderne.        |
+| **-a 0**      | **Attaque** : Straight (Directe)             | Dictionnaire simple (comme rockyou).                |
+| **-a 6**      | **Attaque** : Hybride (Dico + Masque)        | Pour tester `Mot123` (Chiffres à la fin).          |
+| **-a 7**      | **Attaque** : Hybride (Masque + Dico)        | Pour tester `123Mot` (Chiffres au début).         |
+| **-r [fichier]** | **Rules** (Règles)                         | Pour appliquer des mutations (best64.rule, dive.rule). |
+| **?d**        | **Digit** (Chiffre)                          | Représente `0123456789`.                           |
+| **--show**    | **Montrer**                                  | Affiche les mots de passe déjà trouvés dans le "pot". |
 
 ---
