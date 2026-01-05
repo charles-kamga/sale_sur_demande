@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { Folder, FileText, Search, Menu, X, ChevronRight, Terminal, BookOpen, Shield } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 import ReactMarkdown from 'react-markdown';
+import remarkGfm from 'remark-gfm';
 import './App.css';
 
 const App = () => {
@@ -120,7 +121,7 @@ const App = () => {
                                 <h1>{selectedFile.name}</h1>
                             </header>
                             <article className="markdown-body">
-                                <ReactMarkdown>{fileContent}</ReactMarkdown>
+                                <ReactMarkdown remarkPlugins={[remarkGfm]}>{fileContent}</ReactMarkdown>
                             </article>
                         </motion.div>
                     ) : (
