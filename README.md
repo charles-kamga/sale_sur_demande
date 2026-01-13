@@ -1,4 +1,4 @@
-# 📚 Salle sur Demande
+# Salle sur Demande
 
 Une interface web moderne et sécurisée pour consulter vos notes de recherche en Markdown, accessible de n'importe où.
 
@@ -6,15 +6,15 @@ Une interface web moderne et sécurisée pour consulter vos notes de recherche e
 ![React](https://img.shields.io/badge/React-18.3-61dafb)
 ![Vite](https://img.shields.io/badge/Vite-5.4-646cff)
 
-## ✨ Fonctionnalités
+## Fonctionnalités
 
-- 🎨 **Interface Premium** : Design moderne avec effets glassmorphism et animations fluides
-- 📝 **Support Markdown Complet** : Rendu des tableaux, listes de tâches, et syntaxe GitHub Flavored Markdown
-- 🔍 **Recherche Rapide** : Trouvez vos notes instantanément
-- 📱 **Responsive** : Interface adaptée mobile et desktop
-- 🌐 **Déploiement Facile** : Prêt pour Render, Vercel, Netlify
+- **Interface Premium** : Design moderne avec effets glassmorphism et animations fluides
+- **Support Markdown Complet** : Rendu des tableaux, listes de tâches, et syntaxe GitHub Flavored Markdown
+- **Recherche Rapide** : Trouvez vos notes instantanément
+- **Responsive** : Interface adaptée mobile et desktop
+- **Déploiement Facile** : Prêt pour Render, Vercel, Netlify
 
-## 🚀 Démarrage Rapide
+## Démarrage Rapide
 
 ### Prérequis
 
@@ -40,12 +40,12 @@ npm run dev
 
 L'application sera accessible sur `http://localhost:5173`
 
-## 📁 Structure du Projet
+## Structure du Projet
 
 ```
 /
 ├── public/
-│   ├── docs/              # 📝 Vos fichiers Markdown ici
+│   ├── docs/              # Vos fichiers Markdown ici
 │   └── data.json          # Index généré automatiquement
 ├── src/
 │   ├── components/        # Composants React réutilisables
@@ -57,7 +57,7 @@ L'application sera accessible sur `http://localhost:5173`
 └── package.json
 ```
 
-## 📝 Ajouter de Nouveaux Documents
+## Ajouter de nouveaux documents
 
 1. **Déposez vos fichiers `.md`** dans le dossier `public/docs/`
 2. **Générez l'index** :
@@ -83,7 +83,7 @@ Le déploiement se fera automatiquement sur Render.
 | `npm run index` | Génère l'index des documents Markdown |
 | `npm run lint` | Vérifie la qualité du code |
 
-## 🌐 Déploiement sur Render
+## Déploiement sur Render
 
 1. Connectez votre dépôt GitHub à Render
 2. Configurez le service :
@@ -92,7 +92,7 @@ Le déploiement se fera automatiquement sur Render.
    - **Root Directory** : Laisser vide (ou `./`)
 3. Déployez !
 
-## 🎨 Technologies Utilisées
+## Technologies Utilisées
 
 - **React 18** - Framework UI
 - **Vite** - Build tool ultra-rapide
@@ -101,7 +101,7 @@ Le déploiement se fera automatiquement sur Render.
 - **remark-gfm** - Support GitHub Flavored Markdown
 - **Lucide React** - Icônes modernes
 
-## 📄 License
+## License :
 
 Ce projet est à usage personnel.
 
@@ -111,4 +111,4 @@ Ce projet est à usage personnel.
 
 ---
 
-*Développé avec ❤️ pour un accès sécurisé et élégant à vos notes de recherche*
+*Développé avec pour un accès sécurisé et élégant à vos notes de recherche*
