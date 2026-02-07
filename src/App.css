@@ -327,3 +327,170 @@
         padding: 1.5rem;
     }
 }
+
+/* ACTIONS & EDITOR */
+.doc-header {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+}
+
+.doc-actions {
+    position: absolute;
+    top: 0;
+    right: 0;
+    display: flex;
+    gap: 12px;
+}
+
+.action-btn {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 8px 16px;
+    border-radius: 10px;
+    border: 1px solid var(--glass-border);
+    background: rgba(255, 255, 255, 0.05);
+    color: #fff;
+    cursor: pointer;
+    font-size: 0.85rem;
+    font-weight: 600;
+    transition: all 0.2s;
+}
+
+.action-btn:hover {
+    background: rgba(255, 255, 255, 0.1);
+    border-color: var(--accent-primary);
+    transform: translateY(-2px);
+}
+
+.action-btn.save {
+    background: rgba(16, 185, 129, 0.1);
+    color: #10b981;
+    border-color: rgba(16, 185, 129, 0.3);
+}
+
+.action-btn.save:hover {
+    background: rgba(16, 185, 129, 0.2);
+    border-color: #10b981;
+}
+
+.action-btn.cancel {
+    background: rgba(239, 68, 68, 0.1);
+    color: #ef4444;
+    border-color: rgba(239, 68, 68, 0.3);
+}
+
+.edit-actions {
+    display: flex;
+    gap: 12px;
+}
+
+.markdown-editor {
+    width: 100%;
+    min-height: 60vh;
+    background: rgba(0, 0, 0, 0.2);
+    border: 1px solid var(--glass-border);
+    border-radius: 12px;
+    padding: 1.5rem;
+    color: var(--text-main);
+    font-family: 'Fira Code', monospace;
+    font-size: 1rem;
+    line-height: 1.6;
+    resize: vertical;
+    outline: none;
+    transition: border-color 0.2s;
+}
+
+.markdown-editor:focus {
+    border-color: var(--accent-primary);
+    box-shadow: 0 0 0 2px var(--border-glow);
+}
+
+.spin {
+    animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+    from {
+        transform: rotate(0deg);
+    }
+
+    to {
+        transform: rotate(360deg);
+    }
+}
+
+/* EXPLORER ADDITIONS */
+.explorer-title {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding-right: 8px;
+}
+
+.add-file-btn {
+    background: none;
+    border: none;
+    color: var(--text-muted);
+    cursor: pointer;
+    padding: 4px;
+    border-radius: 4px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.2s;
+}
+
+.add-file-btn:hover {
+    background: rgba(255, 255, 255, 0.1);
+    color: var(--accent-primary);
+}
+
+.new-file-form {
+    margin: 8px;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    background: rgba(255, 255, 255, 0.05);
+    padding: 8px;
+    border-radius: 8px;
+    border: 1px solid var(--accent-primary);
+}
+
+.new-file-form input {
+    background: rgba(0, 0, 0, 0.3);
+    border: 1px solid var(--glass-border);
+    border-radius: 4px;
+    padding: 6px 10px;
+    color: #fff;
+    font-size: 0.85rem;
+    outline: none;
+}
+
+.new-file-form .form-actions {
+    display: flex;
+    justify-content: flex-end;
+    gap: 8px;
+}
+
+.new-file-form .form-actions button {
+    background: none;
+    border: 1px solid var(--glass-border);
+    border-radius: 4px;
+    color: var(--text-muted);
+    cursor: pointer;
+    padding: 4px 8px;
+    display: flex;
+    align-items: center;
+}
+
+.new-file-form .form-actions button.confirm {
+    color: #10b981;
+    border-color: rgba(16, 185, 129, 0.3);
+}
+
+.new-file-form .form-actions button.cancel {
+    color: #ef4444;
+    border-color: rgba(239, 68, 68, 0.3);
+}

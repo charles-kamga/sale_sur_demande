@@ -10,7 +10,7 @@ Une interface web moderne et sécurisée pour consulter vos notes de recherche e
 
 - **Interface Premium** : Design moderne avec effets glassmorphism et animations fluides
 - **Support Markdown Complet** : Rendu des tableaux, listes de tâches, et syntaxe GitHub Flavored Markdown
-- **Recherche Rapide** : Trouvez vos notes instantanément
+- **Édition Directe** : Modifiez vos notes directement dans le navigateur et sauvegardez sur le disque
 - **Responsive** : Interface adaptée mobile et desktop
 - **Déploiement Facile** : Prêt pour Render, Vercel, Netlify
 
@@ -34,11 +34,11 @@ npm install
 # Générer l'index des documents
 npm run index
 
-# Lancer le serveur de développement
-npm run dev
+# Lancer le serveur (API + Frontend)
+npm start
 ```
 
-L'application sera accessible sur `http://localhost:5173`
+L'application sera accessible sur `http://localhost:5173` (ou le port suivant si occupé). Le serveur API tourne sur le port `5000`.
 
 ## Structure du Projet
 
