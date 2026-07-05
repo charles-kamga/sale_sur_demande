@@ -1,9 +1,11 @@
 import { useState, useEffect, useMemo } from 'react';
 import { AnimatePresence } from 'framer-motion';
+import { Shield } from 'lucide-react';
 import Sidebar from './components/Sidebar';
 import FileTree from './components/FileTree';
 import DocViewer from './components/DocViewer';
 import WelcomeScreen from './components/WelcomeScreen';
+import Toast, { useToast } from './components/Toast';
 import './App.css';
 
 export default function App() {
@@ -16,7 +18,9 @@ export default function App() {
   const [isSaving, setIsSaving] = useState(false);
   const [isCreatingNew, setIsCreatingNew] = useState(false);
   const [newFileName, setNewFileName] = useState('');
-  const [activeCategory, setActiveCategory] = useState(null);
+  const [expandedDirs, setExpandedDirs] = useState({});
+
+  const { notifications, addToast, removeToast } = useToast();
 
   // ── Chargement de l'index ──
   const fetchIndex = () => {
@@ -25,6 +29,18 @@ export default function App() {
       .then((res) => res.json())
       .then((json) => {
         setData(json);
+        // Déplier toutes les catégories par défaut
+        const dirs = {};
+        const initDirs = (items) => {
+          items.forEach((item) => {
+            if (item.type === 'directory') {
+              dirs[item.path] = true;
+              initDirs(item.children);
+            }
+          });
+        };
+        initDirs(json);
+        setExpandedDirs(dirs);
         setLoading(false);
       })
       .catch((err) => {
@@ -43,7 +59,10 @@ export default function App() {
     fetch(`/docs/${selectedFile.path}`)
       .then((res) => res.text())
       .then((text) => setFileContent(text))
-      .catch(() => setFileContent('## Erreur\nImpossible de charger le fichier.'));
+      .catch(() => {
+        setFileContent('## Erreur\nImpossible de charger le fichier.');
+        addToast('Impossible de charger le fichier', 'error');
+      });
   }, [selectedFile]);
 
   // ── Sauvegarde ──
@@ -57,11 +76,12 @@ export default function App() {
       });
       if (res.ok) {
         setFileContent(content);
+        addToast('Document sauvegardé ✓', 'success');
       } else {
-        alert('Erreur lors de la sauvegarde');
+        addToast('Erreur lors de la sauvegarde', 'error');
       }
     } catch {
-      alert('Erreur réseau lors de la sauvegarde');
+      addToast('Erreur réseau', 'error');
     } finally {
       setIsSaving(false);
     }
@@ -74,6 +94,12 @@ export default function App() {
 
     let fileName = newFileName.trim();
     if (!fileName.endsWith('.md')) fileName += '.md';
+
+    // Validation caractères interdits
+    if (/[<>:"/\\|?*]/.test(fileName)) {
+      addToast('Caractères interdits dans le nom', 'error');
+      return;
+    }
 
     try {
       const res = await fetch('/api/save', {
@@ -89,27 +115,31 @@ export default function App() {
         setIsCreatingNew(false);
         fetchIndex();
         setSelectedFile({ name: fileName, path: fileName, type: 'file', extension: '.md' });
+        addToast(`Fichier "${fileName}" créé ✓`, 'success');
       } else {
-        alert('Erreur lors de la création du fichier');
+        addToast('Erreur lors de la création', 'error');
       }
     } catch {
-      alert('Erreur réseau');
+      addToast('Erreur réseau', 'error');
     }
   };
 
-  // ── Navigation catégorie ──
-  const handleCategorySelect = (dirName) => {
-    setActiveCategory(dirName);
-    // Scroll doucement vers l'explorateur — les fichiers du dossier seront visibles
+  // ── Accordéon : toggle dossier ──
+  const handleToggleDir = (path) => {
+    setExpandedDirs((prev) => ({ ...prev, [path]: !prev[path] }));
   };
 
+  // ── Navigation ──
   const handleSelectFile = (file) => {
     setSelectedFile(file);
-    setActiveCategory(null);
-    // Fermer la sidebar sur mobile
     if (window.innerWidth <= 768) {
       setSidebarOpen(false);
     }
+  };
+
+  const handleGoHome = () => {
+    setSelectedFile(null);
+    setFileContent('');
   };
 
   // ── Recherche filtrée ──
@@ -122,20 +152,17 @@ export default function App() {
       for (const item of items) {
         if (item.type === 'directory') {
           const children = filterItems(item.children);
-          if (children.length > 0) {
-            result.push({ ...item, children });
-          }
+          if (children.length > 0) result.push({ ...item, children });
         } else if (item.name.toLowerCase().includes(term)) {
           result.push(item);
         }
       }
       return result;
     };
-
     return filterItems(data);
   }, [data, searchTerm]);
 
-  // ── Compteur docs ──
+  // ── Stats ──
   const docCount = useMemo(() => {
     const countFiles = (items) =>
       items.reduce((acc, item) => {
@@ -147,13 +174,9 @@ export default function App() {
 
   return (
     <div className="app-container">
-      {/* Bouton menu mobile */}
+      {/* Mobile menu button */}
       {!isSidebarOpen && (
-        <button
-          className="menu-toggle"
-          onClick={() => setSidebarOpen(true)}
-          aria-label="Ouvrir la navigation"
-        >
+        <button className="menu-toggle" onClick={() => setSidebarOpen(true)} aria-label="Ouvrir la navigation">
           <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
             <path d="M3 12h18M3 6h18M3 18h18" />
           </svg>
@@ -170,10 +193,7 @@ export default function App() {
         onCreateFile={handleCreateFile}
         newFileName={newFileName}
         onNewFileNameChange={setNewFileName}
-        onCancelCreate={() => {
-          setIsCreatingNew(false);
-          setNewFileName('');
-        }}
+        onCancelCreate={() => { setIsCreatingNew(false); setNewFileName(''); }}
       >
         {loading ? (
           <p className="loading">Chargement…</p>
@@ -182,11 +202,24 @@ export default function App() {
             items={filteredData}
             selectedFile={selectedFile}
             onSelect={handleSelectFile}
+            expandedDirs={expandedDirs}
+            onToggleDir={handleToggleDir}
           />
         )}
       </Sidebar>
 
       <main className="main-content" id="main-content" role="main">
+        {/* Navbar contextuelle */}
+        <div className="context-bar" role="navigation" aria-label="Barre de navigation">
+          <button className="context-home" onClick={handleGoHome} aria-label="Accueil">
+            <Shield size={18} className="context-icon" />
+            <span>Salle sur Demande</span>
+          </button>
+          {selectedFile && (
+            <span className="context-path">{selectedFile.path}</span>
+          )}
+        </div>
+
         <AnimatePresence mode="wait">
           {selectedFile ? (
             <DocViewer
@@ -201,11 +234,14 @@ export default function App() {
               key="welcome"
               data={data}
               onSelect={handleSelectFile}
-              onCategorySelect={handleCategorySelect}
+              onCategorySelect={handleToggleDir}
             />
           )}
         </AnimatePresence>
       </main>
+
+      {/* Toast notifications */}
+      <Toast notifications={notifications} removeToast={removeToast} />
     </div>
   );
 }
