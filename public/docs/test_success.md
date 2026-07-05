@@ -1,1 +1,0 @@
-Checking if sync works after token update

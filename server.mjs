@@ -11,8 +11,8 @@ const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
 const app = express();
-const PORT = 5000;
-const DOCS_DIR = path.join(__dirname, 'public/docs');
+const PORT = parseInt(process.env.PORT, 10) || 5000;
+const DOCS_DIR = path.resolve(process.env.DOCS_DIR || path.join(__dirname, 'public/docs'));
 
 app.use(cors());
 app.use(express.json());
