@@ -23,53 +23,92 @@ export default function DocViewer({ selectedFile, fileContent, onSave, isSaving 
     setIsEditing(false);
   };
 
+  const handleKeydown = (e) => {
+    if ((e.ctrlKey || e.metaKey) && e.key === 's') {
+      e.preventDefault();
+      if (isEditing) handleSave();
+    }
+  };
+
+  useEffect(() => {
+    document.addEventListener('keydown', handleKeydown);
+    return () => document.removeEventListener('keydown', handleKeydown);
+  }, [isEditing, tempContent]);
+
   if (!selectedFile) return null;
 
   const isPdf = selectedFile.extension === '.pdf';
   const pdfUrl = `/docs/${selectedFile.path}`;
 
   return (
-    <motion.div
+    <motion.article
       key={selectedFile.path}
-      initial={{ opacity: 0, y: 20 }}
+      initial={{ opacity: 0, y: 16 }}
       animate={{ opacity: 1, y: 0 }}
-      exit={{ opacity: 0, y: -20 }}
+      exit={{ opacity: 0, y: -8 }}
       className="document-viewer"
+      aria-label={`Document : ${selectedFile.name}`}
     >
       <header className="doc-header">
-        <div className="breadcrumb">
-          <BookOpen size={16} />
-          <span>{selectedFile.path.replace(/\//g, ' > ')}</span>
-        </div>
+        <nav className="breadcrumb" aria-label="Chemin du document">
+          <BookOpen size={14} aria-hidden="true" />
+          <span>{selectedFile.path.replace(/\//g, ' › ')}</span>
+        </nav>
 
-        {isPdf && (
+        {isPdf ? (
           <div className="pdf-actions">
-            <a href={pdfUrl} target="_blank" rel="noopener noreferrer" className="action-btn">
-              <ExternalLink size={16} />
-              Ouvrir dans un onglet
+            <a
+              href={pdfUrl}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="btn"
+              aria-label="Ouvrir le PDF dans un nouvel onglet"
+            >
+              <ExternalLink size={16} aria-hidden="true" />
+              Ouvrir
             </a>
-            <a href={pdfUrl} download className="action-btn">
-              <Download size={16} />
+            <a
+              href={pdfUrl}
+              download
+              className="btn btn-primary"
+              aria-label="Télécharger le PDF"
+            >
+              <Download size={16} aria-hidden="true" />
               Télécharger
             </a>
           </div>
-        )}
-
-        {!isPdf && (
-          <div className="doc-actions">
+        ) : (
+          <div className="doc-actions" role="toolbar" aria-label="Actions du document">
             {!isEditing ? (
-              <button className="action-btn" onClick={() => setIsEditing(true)}>
-                <Edit2 size={16} />
+              <button
+                className="btn btn-primary"
+                onClick={() => setIsEditing(true)}
+                aria-label="Éditer le document"
+              >
+                <Edit2 size={16} aria-hidden="true" />
                 Éditer
               </button>
             ) : (
               <div className="edit-actions">
-                <button className="action-btn save" onClick={handleSave} disabled={isSaving}>
-                  {isSaving ? <RotateCcw size={16} className="spin" /> : <Check size={16} />}
-                  Sauvegarder
+                <button
+                  className="btn btn-green"
+                  onClick={handleSave}
+                  disabled={isSaving}
+                  aria-label="Sauvegarder les modifications"
+                >
+                  {isSaving ? (
+                    <RotateCcw size={16} className="spin" aria-hidden="true" />
+                  ) : (
+                    <Check size={16} aria-hidden="true" />
+                  )}
+                  {isSaving ? 'Sauvegarde…' : 'Sauvegarder'}
                 </button>
-                <button className="action-btn cancel" onClick={handleCancel}>
-                  <X size={16} />
+                <button
+                  className="btn btn-red"
+                  onClick={handleCancel}
+                  aria-label="Annuler les modifications"
+                >
+                  <X size={16} aria-hidden="true" />
                   Annuler
                 </button>
               </div>
@@ -86,23 +125,27 @@ export default function DocViewer({ selectedFile, fileContent, onSave, isSaving 
             src={`${pdfUrl}#view=FitH`}
             className="pdf-viewer"
             title={selectedFile.name}
+            aria-label={`Visualisation du PDF : ${selectedFile.name}`}
           />
         </div>
       ) : (
-        <article className="markdown-body">
+        <section className="markdown-body">
           {isEditing ? (
             <textarea
               className="markdown-editor"
               value={tempContent}
               onChange={(e) => setTempContent(e.target.value)}
-              placeholder="Écrivez votre Markdown ici..."
+              placeholder="Écrivez votre Markdown ici…"
               spellCheck="false"
+              aria-label="Éditeur Markdown"
             />
           ) : (
-            <ReactMarkdown remarkPlugins={[remarkGfm]}>{fileContent}</ReactMarkdown>
+            <ReactMarkdown remarkPlugins={[remarkGfm]}>
+              {fileContent}
+            </ReactMarkdown>
           )}
-        </article>
+        </section>
       )}
-    </motion.div>
+    </motion.article>
   );
 }

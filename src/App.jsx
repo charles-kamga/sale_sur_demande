@@ -16,6 +16,7 @@ export default function App() {
   const [isSaving, setIsSaving] = useState(false);
   const [isCreatingNew, setIsCreatingNew] = useState(false);
   const [newFileName, setNewFileName] = useState('');
+  const [activeCategory, setActiveCategory] = useState(null);
 
   // ── Chargement de l'index ──
   const fetchIndex = () => {
@@ -45,7 +46,7 @@ export default function App() {
       .catch(() => setFileContent('## Erreur\nImpossible de charger le fichier.'));
   }, [selectedFile]);
 
-  // ── Sauvegarde (proxy Vite → /api/* → localhost:5000) ──
+  // ── Sauvegarde ──
   const handleSave = async (content) => {
     setIsSaving(true);
     try {
@@ -80,14 +81,14 @@ export default function App() {
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
           path: fileName,
-          content: `# ${fileName.replace('.md', '')}\n\nCommencez à écrire ici...`,
+          content: `# ${fileName.replace('.md', '')}\n\nCommencez à écrire ici…`,
         }),
       });
       if (res.ok) {
         setNewFileName('');
         setIsCreatingNew(false);
         fetchIndex();
-        setSelectedFile({ name: fileName, path: fileName, type: 'file' });
+        setSelectedFile({ name: fileName, path: fileName, type: 'file', extension: '.md' });
       } else {
         alert('Erreur lors de la création du fichier');
       }
@@ -96,12 +97,26 @@ export default function App() {
     }
   };
 
-  // ── Recherche filtrée (récursive) ──
+  // ── Navigation catégorie ──
+  const handleCategorySelect = (dirName) => {
+    setActiveCategory(dirName);
+    // Scroll doucement vers l'explorateur — les fichiers du dossier seront visibles
+  };
+
+  const handleSelectFile = (file) => {
+    setSelectedFile(file);
+    setActiveCategory(null);
+    // Fermer la sidebar sur mobile
+    if (window.innerWidth <= 768) {
+      setSidebarOpen(false);
+    }
+  };
+
+  // ── Recherche filtrée ──
   const filteredData = useMemo(() => {
     if (!searchTerm.trim()) return data;
 
     const term = searchTerm.toLowerCase();
-
     const filterItems = (items) => {
       const result = [];
       for (const item of items) {
@@ -120,7 +135,7 @@ export default function App() {
     return filterItems(data);
   }, [data, searchTerm]);
 
-  // ── Compteur de documents (dynamique) ──
+  // ── Compteur docs ──
   const docCount = useMemo(() => {
     const countFiles = (items) =>
       items.reduce((acc, item) => {
@@ -132,6 +147,19 @@ export default function App() {
 
   return (
     <div className="app-container">
+      {/* Bouton menu mobile */}
+      {!isSidebarOpen && (
+        <button
+          className="menu-toggle"
+          onClick={() => setSidebarOpen(true)}
+          aria-label="Ouvrir la navigation"
+        >
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+            <path d="M3 12h18M3 6h18M3 18h18" />
+          </svg>
+        </button>
+      )}
+
       <Sidebar
         isOpen={isSidebarOpen}
         onToggle={() => setSidebarOpen(!isSidebarOpen)}
@@ -148,13 +176,17 @@ export default function App() {
         }}
       >
         {loading ? (
-          <div className="loading">Initialisation...</div>
+          <p className="loading">Chargement…</p>
         ) : (
-          <FileTree items={filteredData} selectedFile={selectedFile} onSelect={setSelectedFile} />
+          <FileTree
+            items={filteredData}
+            selectedFile={selectedFile}
+            onSelect={handleSelectFile}
+          />
         )}
       </Sidebar>
 
-      <main className="main-content">
+      <main className="main-content" id="main-content" role="main">
         <AnimatePresence mode="wait">
           {selectedFile ? (
             <DocViewer
@@ -165,7 +197,12 @@ export default function App() {
               isSaving={isSaving}
             />
           ) : (
-            <WelcomeScreen count={docCount} />
+            <WelcomeScreen
+              key="welcome"
+              data={data}
+              onSelect={handleSelectFile}
+              onCategorySelect={handleCategorySelect}
+            />
           )}
         </AnimatePresence>
       </main>
