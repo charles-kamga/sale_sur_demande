@@ -1,4 +1,4 @@
-import { Folder, FileText } from 'lucide-react';
+import { Folder, FileText, FileText as FilePdf } from 'lucide-react';
 
 export default function FileTree({ items, selectedFile, onSelect }) {
   if (!items || items.length === 0) {
@@ -21,13 +21,14 @@ export default function FileTree({ items, selectedFile, onSelect }) {
             </div>
           );
         }
+        const Icon = item.extension === '.pdf' ? FilePdf : FileText;
         return (
           <div
             key={item.path}
             className={`tree-item file ${selectedFile?.path === item.path ? 'active' : ''}`}
             onClick={() => onSelect(item)}
           >
-            <FileText size={16} className="icon" />
+            <Icon size={16} className="icon" />
             <span>{item.name}</span>
           </div>
         );

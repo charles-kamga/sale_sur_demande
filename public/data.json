@@ -1,5 +1,29 @@
 [
   {
+    "name": "abasi_reza_thesis.pdf",
+    "type": "file",
+    "extension": ".pdf",
+    "path": "abasi_reza_thesis.pdf",
+    "size": 6649673,
+    "mtime": "2026-07-05T13:26:30.897Z"
+  },
+  {
+    "name": "Art of Google Dorking - Meetup Resources.pdf",
+    "type": "file",
+    "extension": ".pdf",
+    "path": "Art of Google Dorking - Meetup Resources.pdf",
+    "size": 4091290,
+    "mtime": "2026-07-05T13:26:30.905Z"
+  },
+  {
+    "name": "Cours-IA-Inforjeunes-V3.pdf",
+    "type": "file",
+    "extension": ".pdf",
+    "path": "Cours-IA-Inforjeunes-V3.pdf",
+    "size": 16355603,
+    "mtime": "2026-07-05T13:26:30.929Z"
+  },
+  {
     "name": "Dec_8_Hashcat.md",
     "type": "file",
     "extension": ".md",
@@ -8,12 +32,28 @@
     "mtime": "2026-07-05T13:01:02.797Z"
   },
   {
+    "name": "GoogleDorking.pdf",
+    "type": "file",
+    "extension": ".pdf",
+    "path": "GoogleDorking.pdf",
+    "size": 125057,
+    "mtime": "2026-07-05T13:26:30.932Z"
+  },
+  {
     "name": "Intro_Evil_Twin_Charles.md",
     "type": "file",
     "extension": ".md",
     "path": "Intro_Evil_Twin_Charles.md",
     "size": 2444,
     "mtime": "2026-07-05T13:01:02.797Z"
+  },
+  {
+    "name": "Keylogger_Coursera.pdf",
+    "type": "file",
+    "extension": ".pdf",
+    "path": "Keylogger_Coursera.pdf",
+    "size": 233947,
+    "mtime": "2026-07-05T13:26:30.933Z"
   },
   {
     "name": "nettoyage_optimisation_chrome.md",
@@ -30,6 +70,14 @@
     "path": "Rapport de résolution DNS.md",
     "size": 3494,
     "mtime": "2026-07-05T13:01:02.797Z"
+  },
+  {
+    "name": "Recommendations_Portfolio.pdf",
+    "type": "file",
+    "extension": ".pdf",
+    "path": "Recommendations_Portfolio.pdf",
+    "size": 67022,
+    "mtime": "2026-07-05T13:26:30.934Z"
   },
   {
     "name": "reolution_du_probleme_de_stockage_metasploitable_VM.md",

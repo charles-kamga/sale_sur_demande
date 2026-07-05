@@ -40,11 +40,11 @@ function scanDirectory(dir, relativePath = '') {
                 });
             }
         } else {
-            if (path.extname(file).toLowerCase() === '.md') {
+            if (path.extname(file).toLowerCase() === '.md' || path.extname(file).toLowerCase() === '.pdf') {
                 results.push({
                     name: file,
                     type: 'file',
-                    extension: '.md',
+                    extension: path.extname(file).toLowerCase(),
                     path: relPath,
                     size: stat.size,
                     mtime: stat.mtime
